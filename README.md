@@ -28,3 +28,11 @@ python3 -m http.server 8080
 ## Deep linkek
 
 - `/?track=Éva néni`, `/?track=Margó`, `/?track=Lilla`, `/?track=Kati`
+
+## Nyomtatható kártyák
+
+A `qrcodes/cards/` mappában találhatók a sablonkép + QR-kód + „Micitől …” felirat kombinációi.
+
+```bash
+python3 scripts/generate-greeting-cards.py
+```
