@@ -45,17 +45,17 @@ python3 scripts/generate-qrcodes.py
 Generált fájlok:
 
 - `qrcodes/main.png` → oldal gyökere
-- `qrcodes/track-1.png` … `track-4.png` → `?track=1` … `?track=4` deep linkek
+- `qrcodes/track-eva.png`, `track-margo.png`, `track-lilla.png`, `track-kati.png` → név alapú deep linkek
 
 ## Deep linkek
 
 | URL | Viselkedés |
 |-----|------------|
 | `/` | Alap oldal, kézi sávválasztás |
-| `/?track=1` | 1. sáv betöltése és automatikus indítás |
-| `/?track=2` | 2. sáv |
-| `/?track=3` | 3. sáv |
-| `/?track=4` | 4. sáv |
+| `/?track=Éva` | Éva hang betöltése és automatikus indítás |
+| `/?track=Margó` | Margó hang |
+| `/?track=Lilla` | Lilla hang |
+| `/?track=Kati` | Kati hang |
 
 ## GitHub Pages
 
