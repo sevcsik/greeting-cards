@@ -59,12 +59,9 @@ Generált fájlok:
 
 ## GitHub Pages
 
-A `.github/workflows/deploy.yml` workflow a `main` branch push után:
+A `.github/workflows/deploy.yml` workflow a `main` branch push után feltölti a `public/` mappát a `gh-pages` branch-re.
 
-1. Konvertálja a forrás hangfájlokat (ha vannak).
-2. Feltölti a `public/` mappát GitHub Pages-re.
-
-**Repo beállítás:** Settings → Pages → Build and deployment → Source: **GitHub Actions**.
+**Repo beállítás (egyszeri):** Settings → Pages → Build and deployment → Source: **Deploy from a branch** → Branch: `gh-pages` / `/ (root)`.
 
 ## Helyi előnézet
 
