@@ -7,7 +7,7 @@ import json
 import sys
 import unicodedata
 from pathlib import Path
-from urllib.parse import urlencode
+from urllib.parse import quote, urlencode, urlsplit, urlunsplit
 
 import qrcode
 from qrcode.constants import ERROR_CORRECT_M
@@ -24,7 +24,7 @@ def load_base_url() -> str:
         config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
         base_url = config.get("baseUrl")
         if base_url:
-            return base_url.rstrip("/") + "/"
+            return base_url.rstrip("/")
 
     print(
         "Missing baseUrl in site.config.json. "
@@ -42,11 +42,20 @@ def slugify_filename(name: str) -> str:
     return without_accents.lower().replace(" ", "-")
 
 
+def build_site_url(base_url: str) -> str:
+    return f"{base_url}/"
+
+
 def build_track_url(base_url: str, track_name: str) -> str:
-    return f"{base_url}?{urlencode({'track': track_name})}"
+    query = urlencode({"track": track_name}, quote_via=quote)
+    parts = urlsplit(f"{base_url}/")
+    return urlunsplit((parts.scheme, parts.netloc, parts.path, query, ""))
 
 
 def write_qr_code(url: str, destination: Path) -> None:
+    if "?" not in url and destination.name != "main.png":
+        raise ValueError(f"Track URL missing query string: {url}")
+
     destination.parent.mkdir(parents=True, exist_ok=True)
     qr = qrcode.QRCode(
         version=None,
@@ -65,7 +74,7 @@ def main() -> int:
     base_url = load_base_url()
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    write_qr_code(base_url, OUTPUT_DIR / "main.png")
+    write_qr_code(build_site_url(base_url), OUTPUT_DIR / "main.png")
 
     for track_name in TRACKS:
         write_qr_code(
