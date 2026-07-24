@@ -18,8 +18,10 @@ TEMPLATE_PATH = ROOT / "source" / "img" / "greeting-template.png"
 OUTPUT_DIR = ROOT / "qrcodes" / "cards"
 FONT_PATH = Path("/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf")
 
-# Target QR placement on the white paper (px): left, top, right, bottom
-QR_BOX = (388, 551, 508, 671)
+# Measured on greeting-template.png (896x1195).  The QR belongs in the
+# marked centre of the paper, below the girl's hands and chin.
+PAPER_BOX = (240, 590, 679, 940)
+QR_BOX = (378, 700, 518, 840)
 TEXT_BOTTOM_OFFSET = 68
 
 TRACKS = [
@@ -61,27 +63,27 @@ def make_qr_image(url: str, size: int) -> Image.Image:
     )
     qr.add_data(url)
     qr.make(fit=True)
-    image = qr.make_image(fill_color="#1b1410", back_color="#ffffff").convert("RGB")
+    image = qr.make_image(
+        fill_color="#1b1410",
+        back_color="#ffffff",
+    ).convert("RGB")
     return image.resize((size, size), Image.Resampling.LANCZOS)
 
 
-def compose_card(template: Image.Image, track_name: str, recipient: str, url: str) -> Image.Image:
+def compose_card(template: Image.Image, recipient: str, url: str) -> Image.Image:
     card = template.copy()
     draw = ImageDraw.Draw(card)
 
     left, top, right, bottom = QR_BOX
-    qr_size = min(right - left, bottom - top)
+    qr_size = right - left
     qr = make_qr_image(url, qr_size)
 
-    qr_x = left + (right - left - qr_size) // 2
-    qr_y = top + (bottom - top - qr_size) // 2
-
-    margin = max(4, qr_size // 40)
-    draw.rectangle(
-        (qr_x - margin, qr_y - margin, qr_x + qr_size + margin, qr_y + qr_size + margin),
-        fill="#ffffff",
+    # Preserve the paper beneath the light QR modules.  This gives the QR
+    # code's light areas precisely the same colour and texture as the paper.
+    dark_modules = qr.convert("L").point(
+        lambda value: 255 if value < 128 else 0
     )
-    card.paste(qr, (qr_x, qr_y))
+    card.paste(qr, (left, top), dark_modules)
 
     caption = f"Micitől {recipient}"
     font_size = 34
@@ -106,9 +108,12 @@ def main() -> int:
     template = Image.open(TEMPLATE_PATH).convert("RGB")
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
+    print(f"Paper box: {PAPER_BOX}")
+    print(f"QR box: {QR_BOX} ({QR_BOX[2] - QR_BOX[0]} px)")
+
     for track_name, recipient in TRACKS:
         url = build_track_url(base_url, track_name)
-        card = compose_card(template, track_name, recipient, url)
+        card = compose_card(template, recipient, url)
         output_path = OUTPUT_DIR / f"card-{slugify_filename(track_name)}.png"
         card.save(output_path, optimize=True)
         print(f"Generated {output_path.name} -> {url}")
