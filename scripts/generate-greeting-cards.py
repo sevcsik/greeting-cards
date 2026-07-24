@@ -21,7 +21,10 @@ FONT_PATH = Path("/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf")
 # Measured on greeting-template.png (896x1195).  The QR belongs in the
 # marked centre of the paper, below the girl's hands and chin.
 PAPER_BOX = (240, 590, 679, 940)
-QR_BOX = (378, 700, 518, 840)
+# A 320 px code nearly fills the paper height while retaining a scan margin.
+QR_BOX = (288, 605, 608, 925)
+# The paper's top edge slopes slightly downward towards the right.
+QR_ROTATION_DEGREES = -1.5
 TEXT_BOTTOM_OFFSET = 68
 
 TRACKS = [
@@ -83,7 +86,21 @@ def compose_card(template: Image.Image, recipient: str, url: str) -> Image.Image
     dark_modules = qr.convert("L").point(
         lambda value: 255 if value < 128 else 0
     )
-    card.paste(qr, (left, top), dark_modules)
+    qr = qr.rotate(
+        QR_ROTATION_DEGREES,
+        resample=Image.Resampling.NEAREST,
+        expand=True,
+        fillcolor="#ffffff",
+    )
+    dark_modules = dark_modules.rotate(
+        QR_ROTATION_DEGREES,
+        resample=Image.Resampling.NEAREST,
+        expand=True,
+        fillcolor=0,
+    )
+    qr_x = (left + right - qr.width) // 2
+    qr_y = (top + bottom - qr.height) // 2
+    card.paste(qr, (qr_x, qr_y), dark_modules)
 
     caption = f"Micitől {recipient}"
     font_size = 34
@@ -109,7 +126,10 @@ def main() -> int:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     print(f"Paper box: {PAPER_BOX}")
-    print(f"QR box: {QR_BOX} ({QR_BOX[2] - QR_BOX[0]} px)")
+    print(
+        f"QR box: {QR_BOX} ({QR_BOX[2] - QR_BOX[0]} px, "
+        f"{QR_ROTATION_DEGREES}°)"
+    )
 
     for track_name, recipient in TRACKS:
         url = build_track_url(base_url, track_name)
