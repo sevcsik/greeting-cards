@@ -12,7 +12,6 @@ const elements = {
   currentTime: document.getElementById("current-time"),
   duration: document.getElementById("duration"),
   trackTitle: document.getElementById("track-title"),
-  trackList: document.getElementById("track-list"),
 };
 
 const deepLinkTrack = getTrackFromQuery();

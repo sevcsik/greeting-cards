@@ -10,7 +10,6 @@ export class AudioPlayer {
     this.isSeeking = false;
 
     this.bindEvents();
-    this.renderTrackList();
     this.loadTrack(this.currentTrackIndex, { autoplay: autoPlay });
   }
 
@@ -27,26 +26,6 @@ export class AudioPlayer {
     this.audio.addEventListener("pause", () => this.updatePlayButton(false));
   }
 
-  renderTrackList() {
-    this.elements.trackList.replaceChildren();
-
-    this.tracks.forEach((track, index) => {
-      const item = document.createElement("li");
-      item.className = "track-list__item";
-
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "track-list__button";
-      button.dataset.index = String(index);
-      button.setAttribute("role", "option");
-      button.textContent = track.title;
-      button.addEventListener("click", () => this.selectTrack(index, { autoplay: true }));
-
-      item.append(button);
-      this.elements.trackList.append(item);
-    });
-  }
-
   loadTrack(index, { autoplay = false } = {}) {
     const track = this.tracks[index];
     if (!track) {
@@ -57,7 +36,6 @@ export class AudioPlayer {
     this.audio.src = track.src;
     this.audio.load();
     this.elements.trackTitle.textContent = track.title;
-    this.updateActiveTrackButton();
     this.resetProgress();
 
     if (autoplay) {
@@ -166,11 +144,4 @@ export class AudioPlayer {
     );
   }
 
-  updateActiveTrackButton() {
-    this.elements.trackList.querySelectorAll(".track-list__button").forEach((button) => {
-      const isActive = Number(button.dataset.index) === this.currentTrackIndex;
-      button.classList.toggle("is-active", isActive);
-      button.setAttribute("aria-selected", String(isActive));
-    });
-  }
 }

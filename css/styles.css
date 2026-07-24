@@ -175,47 +175,6 @@ body {
   display: none;
 }
 
-.track-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.55rem;
-}
-
-.track-list__item {
-  min-width: 0;
-}
-
-.track-list__button {
-  width: 100%;
-  padding: 0.75rem 0.5rem;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  color: inherit;
-  font: inherit;
-  font-size: 0.82rem;
-  font-weight: 600;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-}
-
-.track-list__button:hover {
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.track-list__button.is-active {
-  border-color: rgba(255, 214, 168, 0.65);
-  background: rgba(255, 184, 108, 0.22);
-  color: #fff8f2;
-}
-
 @media (min-width: 640px) {
   .player-screen__controls {
     left: 50%;
@@ -228,10 +187,6 @@ body {
     padding: 1.5rem 1.5rem calc(1.5rem + var(--safe-bottom));
   }
 
-  .track-list__button {
-    font-size: 0.9rem;
-    padding: 0.85rem 0.75rem;
-  }
 }
 
 @media (max-height: 640px) {
