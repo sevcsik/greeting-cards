@@ -11,7 +11,7 @@ public/                 # GitHub Pages site root
   index.html
   css/styles.css
   js/{config,player,main}.js
-  assets/audio/*.mp3
+  assets/audio/*.m4a
   assets/img/background.jpg
 source/                 # Forrás média (WAV + háttérkép)
 scripts/                # Build és QR generáló scriptek
@@ -22,7 +22,7 @@ site.config.json        # Publikus base URL a QR-kódokhoz
 
 ## Média optimalizálás
 
-1. Tedd a 4 darab `.wav` fájlt a `source/audio/` mappába (`track1.wav` … `track4.wav` sorrendben).
+1. Tedd a hangfájlokat a `source/audio/` mappába (`eva.m4a`, `margo.m4a`, `lilla.m4a`, `kati.m4a`).
 2. Tedd a háttérképet a `source/img/` mappába (`background.jpg` ajánlott).
 3. Futtasd:
 
@@ -31,7 +31,7 @@ python3 scripts/convert-audio.py
 python3 scripts/copy-background.py
 ```
 
-Az ffmpeg 128 kbps stereo MP3-at készít a `public/assets/audio/` mappába.
+Az ffmpeg a forrás `.m4a` fájlokat webre készített assetekké másolja a `public/assets/audio/` mappába.
 
 ## QR-kódok
 
@@ -77,4 +77,4 @@ Nyisd meg: http://localhost:8080
 
 ## Megjegyzés a csatolt fájlokról
 
-Ha a saját `.wav` és háttérkép fájljaid még nem kerültek a `source/` mappába, másold be őket, futtasd újra a konverziós scripteket, majd a QR generátort.
+A projekt a feltöltött `Éva.m4a`, `Margó.m4a`, `Lilla.m4a` és `Kati.m4a` hangfájlokat használja.

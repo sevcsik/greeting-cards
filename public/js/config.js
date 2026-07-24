@@ -1,23 +1,23 @@
 export const TRACKS = [
   {
     id: 1,
-    title: "Üdvözlő 1",
-    src: "assets/audio/track1.mp3",
+    title: "Éva",
+    src: "assets/audio/track1.m4a",
   },
   {
     id: 2,
-    title: "Üdvözlő 2",
-    src: "assets/audio/track2.mp3",
+    title: "Margó",
+    src: "assets/audio/track2.m4a",
   },
   {
     id: 3,
-    title: "Üdvözlő 3",
-    src: "assets/audio/track3.mp3",
+    title: "Lilla",
+    src: "assets/audio/track3.m4a",
   },
   {
     id: 4,
-    title: "Üdvözlő 4",
-    src: "assets/audio/track4.mp3",
+    title: "Kati",
+    src: "assets/audio/track4.m4a",
   },
 ];
 
