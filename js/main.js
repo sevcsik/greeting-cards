@@ -7,10 +7,6 @@ const elements = {
   playIcon: document.querySelector(".icon--play"),
   pauseIcon: document.querySelector(".icon--pause"),
   replayIcon: document.querySelector(".icon--replay"),
-  progressBar: document.getElementById("progress-bar"),
-  currentTime: document.getElementById("current-time"),
-  duration: document.getElementById("duration"),
-  trackTitle: document.getElementById("track-title"),
 };
 
 const deepLinkTrack = getTrackFromQuery();

@@ -56,72 +56,12 @@ body {
   inset: auto 0 0;
   z-index: 2;
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1.25rem 1.25rem calc(1.25rem + var(--safe-bottom));
+  justify-content: center;
+  padding: 1rem 1.25rem calc(1rem + var(--safe-bottom));
   border-top: 1px solid var(--panel-border);
   background: var(--panel);
   backdrop-filter: blur(18px);
   box-shadow: var(--shadow);
-}
-
-.player-screen__meta {
-  text-align: center;
-}
-
-.player-screen__label {
-  margin: 0;
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.player-screen__title {
-  margin: 0.35rem 0 0;
-  font-size: clamp(1.6rem, 6vw, 2.4rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
-}
-
-.player-screen__progress {
-  width: 100%;
-}
-
-.player-screen__time {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.45rem;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-}
-
-.player-screen__seek {
-  width: 100%;
-  height: 0.4rem;
-  appearance: none;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.18);
-  cursor: pointer;
-}
-
-.player-screen__seek::-webkit-slider-thumb {
-  appearance: none;
-  width: 1rem;
-  height: 1rem;
-  border-radius: 50%;
-  background: var(--accent-strong);
-  border: 2px solid #fff;
-  box-shadow: 0 0 0 4px rgba(255, 184, 108, 0.25);
-}
-
-.player-screen__seek::-moz-range-thumb {
-  width: 1rem;
-  height: 1rem;
-  border-radius: 50%;
-  background: var(--accent-strong);
-  border: 2px solid #fff;
 }
 
 .player-screen__transport {
@@ -180,20 +120,15 @@ body {
     left: 50%;
     right: auto;
     bottom: 1.5rem;
-    width: min(100%, 560px);
+    width: auto;
     transform: translateX(-50%);
     border: 1px solid var(--panel-border);
-    border-radius: 24px;
-    padding: 1.5rem 1.5rem calc(1.5rem + var(--safe-bottom));
+    border-radius: 999px;
+    padding: 0.85rem 1.25rem calc(0.85rem + var(--safe-bottom));
   }
-
 }
 
 @media (max-height: 640px) {
-  .player-screen__title {
-    font-size: 1.35rem;
-  }
-
   .player-screen__btn--primary {
     width: 3.75rem;
     height: 3.75rem;

@@ -1,5 +1,3 @@
-import { formatTime } from "./config.js";
-
 export class AudioPlayer {
   constructor({ audioElement, tracks, elements, autoPlay = false }) {
     this.audio = audioElement;
@@ -7,7 +5,6 @@ export class AudioPlayer {
     this.elements = elements;
     this.autoPlay = autoPlay;
     this.currentTrackIndex = 0;
-    this.isSeeking = false;
     this.hasEnded = false;
 
     this.bindEvents();
@@ -17,11 +14,6 @@ export class AudioPlayer {
 
   bindEvents() {
     this.elements.playPauseBtn.addEventListener("click", () => this.togglePlayback());
-    this.elements.progressBar.addEventListener("input", () => this.onSeekInput());
-    this.elements.progressBar.addEventListener("change", () => this.onSeekCommit());
-
-    this.audio.addEventListener("loadedmetadata", () => this.updateDuration());
-    this.audio.addEventListener("timeupdate", () => this.updateProgress());
     this.audio.addEventListener("ended", () => this.onTrackEnded());
     this.audio.addEventListener("play", () => {
       this.hasEnded = false;
@@ -39,9 +31,7 @@ export class AudioPlayer {
     this.currentTrackIndex = index;
     this.audio.src = track.src;
     this.audio.load();
-    this.elements.trackTitle.textContent = track.title;
     this.hasEnded = false;
-    this.resetProgress();
 
     if (autoplay) {
       this.play().catch(() => {
@@ -99,44 +89,6 @@ export class AudioPlayer {
     this.updateTransportButton(false);
   }
 
-  onSeekInput() {
-    this.isSeeking = true;
-    const duration = this.audio.duration || 0;
-    const nextTime = (Number(this.elements.progressBar.value) / 100) * duration;
-    this.elements.currentTime.textContent = formatTime(nextTime);
-  }
-
-  onSeekCommit() {
-    const duration = this.audio.duration || 0;
-    const nextTime = (Number(this.elements.progressBar.value) / 100) * duration;
-    this.audio.currentTime = nextTime;
-    this.isSeeking = false;
-    this.hasEnded = false;
-  }
-
-  updateProgress() {
-    if (this.isSeeking) {
-      return;
-    }
-
-    const duration = this.audio.duration || 0;
-    const currentTime = this.audio.currentTime || 0;
-    const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
-
-    this.elements.progressBar.value = String(progress);
-    this.elements.currentTime.textContent = formatTime(currentTime);
-  }
-
-  updateDuration() {
-    this.elements.duration.textContent = formatTime(this.audio.duration || 0);
-  }
-
-  resetProgress() {
-    this.elements.progressBar.value = "0";
-    this.elements.currentTime.textContent = "0:00";
-    this.elements.duration.textContent = "0:00";
-  }
-
   updateTransportButton(isPlaying) {
     const showReplay = !isPlaying && (this.hasEnded || this.audio.ended);
 
@@ -148,5 +100,4 @@ export class AudioPlayer {
       isPlaying ? "Szünet" : showReplay ? "Újrajátszás" : "Lejátszás",
     );
   }
-
 }
