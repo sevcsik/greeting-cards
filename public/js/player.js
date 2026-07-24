@@ -16,6 +16,8 @@ export class AudioPlayer {
 
   bindEvents() {
     this.elements.playPauseBtn.addEventListener("click", () => this.togglePlayback());
+    this.elements.prevBtn?.addEventListener("click", () => this.previousTrack());
+    this.elements.nextBtn?.addEventListener("click", () => this.nextTrack());
     this.elements.progressBar.addEventListener("input", () => this.onSeekInput());
     this.elements.progressBar.addEventListener("change", () => this.onSeekCommit());
 
@@ -38,10 +40,7 @@ export class AudioPlayer {
       button.className = "track-list__button";
       button.dataset.index = String(index);
       button.setAttribute("role", "option");
-      button.innerHTML = `
-        <span class="track-list__index">${track.id}</span>
-        <span class="track-list__name">${track.title}</span>
-      `;
+      button.textContent = track.title;
       button.addEventListener("click", () => this.selectTrack(index, { autoplay: true }));
 
       item.append(button);
@@ -88,6 +87,22 @@ export class AudioPlayer {
 
     this.selectTrack(index, { autoplay });
     return true;
+  }
+
+  previousTrack() {
+    const previousIndex =
+      this.currentTrackIndex > 0
+        ? this.currentTrackIndex - 1
+        : this.tracks.length - 1;
+    this.selectTrack(previousIndex, { autoplay: !this.audio.paused });
+  }
+
+  nextTrack() {
+    const nextIndex =
+      this.currentTrackIndex < this.tracks.length - 1
+        ? this.currentTrackIndex + 1
+        : 0;
+    this.selectTrack(nextIndex, { autoplay: !this.audio.paused });
   }
 
   async togglePlayback() {

@@ -4,6 +4,8 @@ import { AudioPlayer } from "./player.js";
 const audioElement = document.getElementById("audio");
 const elements = {
   playPauseBtn: document.getElementById("play-pause-btn"),
+  prevBtn: document.getElementById("prev-btn"),
+  nextBtn: document.getElementById("next-btn"),
   playIcon: document.querySelector(".icon--play"),
   pauseIcon: document.querySelector(".icon--pause"),
   progressBar: document.getElementById("progress-bar"),

@@ -12,7 +12,7 @@ public/                 # GitHub Pages site root
   css/styles.css
   js/{config,player,main}.js
   assets/audio/*.m4a
-  assets/img/background.jpg
+  assets/img/cover.jpg
 source/                 # Forrás média (WAV + háttérkép)
 scripts/                # Build és QR generáló scriptek
 qrcodes/                # Generált QR-kód PNG-k
@@ -23,7 +23,7 @@ site.config.json        # Publikus base URL a QR-kódokhoz
 ## Média optimalizálás
 
 1. Tedd a hangfájlokat a `source/audio/` mappába (`eva.m4a`, `margo.m4a`, `lilla.m4a`, `kati.m4a`).
-2. Tedd a háttérképet a `source/img/` mappába (`background.jpg` ajánlott).
+2. Tedd a borítóképet a `source/img/` mappába (`cover.jpg` ajánlott).
 3. Futtasd:
 
 ```bash
