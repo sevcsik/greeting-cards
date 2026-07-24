@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import json
 import unicodedata
-from io import BytesIO
 from pathlib import Path
 from urllib.parse import quote, urlencode, urlsplit, urlunsplit
 
@@ -19,9 +18,8 @@ TEMPLATE_PATH = ROOT / "source" / "img" / "greeting-template.png"
 OUTPUT_DIR = ROOT / "qrcodes" / "cards"
 FONT_PATH = Path("/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf")
 
-# White paper area on the template (px): left, top, right, bottom
-PAPER_BOX = (176, 562, 720, 658)
-PAPER_PADDING = 0.05
+# Target QR placement on the white paper (px): left, top, right, bottom
+QR_BOX = (388, 551, 508, 671)
 TEXT_BOTTOM_OFFSET = 68
 
 TRACKS = [
@@ -67,29 +65,17 @@ def make_qr_image(url: str, size: int) -> Image.Image:
     return image.resize((size, size), Image.Resampling.LANCZOS)
 
 
-def paper_inner_box(paper_box: tuple[int, int, int, int]) -> tuple[int, int, int, int]:
-    left, top, right, bottom = paper_box
-    width = right - left
-    height = bottom - top
-    pad_x = int(width * PAPER_PADDING)
-    pad_y = int(height * PAPER_PADDING)
-    return left + pad_x, top + pad_y, right - pad_x, bottom - pad_y
-
-
 def compose_card(template: Image.Image, track_name: str, recipient: str, url: str) -> Image.Image:
     card = template.copy()
     draw = ImageDraw.Draw(card)
 
-    inner = paper_inner_box(PAPER_BOX)
-    inner_width = inner[2] - inner[0]
-    inner_height = inner[3] - inner[1]
-    qr_size = min(inner_width, inner_height)
+    left, top, right, bottom = QR_BOX
+    qr_size = min(right - left, bottom - top)
     qr = make_qr_image(url, qr_size)
 
-    qr_x = inner[0] + (inner_width - qr_size) // 2
-    qr_y = inner[1] + (inner_height - qr_size) // 2
+    qr_x = left + (right - left - qr_size) // 2
+    qr_y = top + (bottom - top - qr_size) // 2
 
-    # Subtle white backing for reliable scanning on textured paper.
     margin = max(4, qr_size // 40)
     draw.rectangle(
         (qr_x - margin, qr_y - margin, qr_x + qr_size + margin, qr_y + qr_size + margin),
