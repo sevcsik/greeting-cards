@@ -23,7 +23,6 @@ export class AudioPlayer {
 
     this.audio.addEventListener("loadedmetadata", () => this.updateDuration());
     this.audio.addEventListener("timeupdate", () => this.updateProgress());
-    this.audio.addEventListener("ended", () => this.onTrackEnded());
     this.audio.addEventListener("play", () => this.updatePlayButton(true));
     this.audio.addEventListener("pause", () => this.updatePlayButton(false));
   }
@@ -119,13 +118,6 @@ export class AudioPlayer {
 
   pause() {
     this.audio.pause();
-  }
-
-  onTrackEnded() {
-    const nextIndex = this.currentTrackIndex + 1;
-    if (nextIndex < this.tracks.length) {
-      this.loadTrack(nextIndex, { autoplay: true });
-    }
   }
 
   onSeekInput() {
