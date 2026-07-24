@@ -3,6 +3,8 @@
   --accent: #ffd6a8;
   --accent-strong: #ffb86c;
   --font: "DM Sans", system-ui, -apple-system, sans-serif;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
 }
 
 *,
@@ -40,11 +42,9 @@ body {
 
 .player-screen__controls {
   position: absolute;
-  inset: 0;
+  right: calc(1.25rem + var(--safe-right));
+  bottom: calc(1.25rem + var(--safe-bottom));
   z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   pointer-events: none;
   background: transparent;
 }
