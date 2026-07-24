@@ -22,10 +22,13 @@ FONT_PATH = Path("/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf")
 # marked centre of the paper, below the girl's hands and chin.
 PAPER_BOX = (240, 590, 679, 940)
 # A 320 px code nearly fills the paper height while retaining a scan margin.
-QR_BOX = (288, 605, 608, 925)
+QR_BOX = (288, 590, 608, 910)
 # The paper's top edge slopes slightly upward towards the right.
 QR_ROTATION_DEGREES = 1.5
 TEXT_BOTTOM_OFFSET = 68
+CAPTION_BOX_COLOR = "#f1e9d6"
+CAPTION_BOX_PADDING_X = 22
+CAPTION_BOX_PADDING_Y = 12
 
 TRACKS = [
     ("Éva néni", "Éva néninek"),
@@ -105,14 +108,18 @@ def compose_card(template: Image.Image, recipient: str, url: str) -> Image.Image
     caption = f"Micitől {recipient}"
     font_size = 34
     font = ImageFont.truetype(str(FONT_PATH), font_size)
-    text_width = draw.textlength(caption, font=font)
+    text_bounds = draw.textbbox((0, 0), caption, font=font)
+    text_width = text_bounds[2] - text_bounds[0]
     text_x = (card.width - text_width) // 2
     text_y = card.height - TEXT_BOTTOM_OFFSET
 
-    shadow = "#ffffff"
-    for dx, dy in ((1, 1), (-1, 1), (1, -1), (-1, -1)):
-        draw.text((text_x + dx, text_y + dy), caption, font=font, fill=shadow)
-
+    caption_box = (
+        text_x - CAPTION_BOX_PADDING_X,
+        text_y + text_bounds[1] - CAPTION_BOX_PADDING_Y,
+        text_x + text_width + CAPTION_BOX_PADDING_X,
+        text_y + text_bounds[3] + CAPTION_BOX_PADDING_Y,
+    )
+    draw.rounded_rectangle(caption_box, radius=14, fill=CAPTION_BOX_COLOR)
     draw.text((text_x, text_y), caption, font=font, fill="#3b2a22")
     return card
 
@@ -131,11 +138,14 @@ def main() -> int:
         f"{QR_ROTATION_DEGREES}°)"
     )
 
+    for stale_path in OUTPUT_DIR.glob("card-*.png"):
+        stale_path.unlink()
+
     for track_name, recipient in TRACKS:
         url = build_track_url(base_url, track_name)
         card = compose_card(template, recipient, url)
-        output_path = OUTPUT_DIR / f"card-{slugify_filename(track_name)}.png"
-        card.save(output_path, optimize=True)
+        output_path = OUTPUT_DIR / f"card-{slugify_filename(track_name)}.jpg"
+        card.save(output_path, "JPEG", quality=95, subsampling=0, optimize=True)
         print(f"Generated {output_path.name} -> {url}")
 
     print(f"Done. Cards saved to {OUTPUT_DIR}")
