@@ -23,8 +23,8 @@ FONT_PATH = Path("/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf")
 PAPER_BOX = (240, 590, 679, 940)
 # A 320 px code nearly fills the paper height while retaining a scan margin.
 QR_BOX = (288, 605, 608, 925)
-# The paper's top edge slopes slightly downward towards the right.
-QR_ROTATION_DEGREES = -1.5
+# The paper's top edge slopes slightly upward towards the right.
+QR_ROTATION_DEGREES = 1.5
 TEXT_BOTTOM_OFFSET = 68
 
 TRACKS = [
@@ -88,13 +88,13 @@ def compose_card(template: Image.Image, recipient: str, url: str) -> Image.Image
     )
     qr = qr.rotate(
         QR_ROTATION_DEGREES,
-        resample=Image.Resampling.NEAREST,
+        resample=Image.Resampling.BICUBIC,
         expand=True,
         fillcolor="#ffffff",
     )
     dark_modules = dark_modules.rotate(
         QR_ROTATION_DEGREES,
-        resample=Image.Resampling.NEAREST,
+        resample=Image.Resampling.BICUBIC,
         expand=True,
         fillcolor=0,
     )
