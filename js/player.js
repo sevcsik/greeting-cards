@@ -8,22 +8,26 @@ export class AudioPlayer {
     this.autoPlay = autoPlay;
     this.currentTrackIndex = 0;
     this.isSeeking = false;
+    this.hasEnded = false;
 
     this.bindEvents();
     this.loadTrack(this.currentTrackIndex, { autoplay: autoPlay });
+    this.updateTransportButton(false);
   }
 
   bindEvents() {
     this.elements.playPauseBtn.addEventListener("click", () => this.togglePlayback());
-    this.elements.prevBtn?.addEventListener("click", () => this.previousTrack());
-    this.elements.nextBtn?.addEventListener("click", () => this.nextTrack());
     this.elements.progressBar.addEventListener("input", () => this.onSeekInput());
     this.elements.progressBar.addEventListener("change", () => this.onSeekCommit());
 
     this.audio.addEventListener("loadedmetadata", () => this.updateDuration());
     this.audio.addEventListener("timeupdate", () => this.updateProgress());
-    this.audio.addEventListener("play", () => this.updatePlayButton(true));
-    this.audio.addEventListener("pause", () => this.updatePlayButton(false));
+    this.audio.addEventListener("ended", () => this.onTrackEnded());
+    this.audio.addEventListener("play", () => {
+      this.hasEnded = false;
+      this.updateTransportButton(true);
+    });
+    this.audio.addEventListener("pause", () => this.updateTransportButton(false));
   }
 
   loadTrack(index, { autoplay = false } = {}) {
@@ -36,6 +40,7 @@ export class AudioPlayer {
     this.audio.src = track.src;
     this.audio.load();
     this.elements.trackTitle.textContent = track.title;
+    this.hasEnded = false;
     this.resetProgress();
 
     if (autoplay) {
@@ -66,23 +71,14 @@ export class AudioPlayer {
     return true;
   }
 
-  previousTrack() {
-    const previousIndex =
-      this.currentTrackIndex > 0
-        ? this.currentTrackIndex - 1
-        : this.tracks.length - 1;
-    this.selectTrack(previousIndex, { autoplay: !this.audio.paused });
-  }
-
-  nextTrack() {
-    const nextIndex =
-      this.currentTrackIndex < this.tracks.length - 1
-        ? this.currentTrackIndex + 1
-        : 0;
-    this.selectTrack(nextIndex, { autoplay: !this.audio.paused });
-  }
-
   async togglePlayback() {
+    if (this.hasEnded || this.audio.ended) {
+      this.audio.currentTime = 0;
+      this.hasEnded = false;
+      await this.play();
+      return;
+    }
+
     if (this.audio.paused) {
       await this.play();
     } else {
@@ -98,6 +94,11 @@ export class AudioPlayer {
     this.audio.pause();
   }
 
+  onTrackEnded() {
+    this.hasEnded = true;
+    this.updateTransportButton(false);
+  }
+
   onSeekInput() {
     this.isSeeking = true;
     const duration = this.audio.duration || 0;
@@ -110,6 +111,7 @@ export class AudioPlayer {
     const nextTime = (Number(this.elements.progressBar.value) / 100) * duration;
     this.audio.currentTime = nextTime;
     this.isSeeking = false;
+    this.hasEnded = false;
   }
 
   updateProgress() {
@@ -135,12 +137,15 @@ export class AudioPlayer {
     this.elements.duration.textContent = "0:00";
   }
 
-  updatePlayButton(isPlaying) {
-    this.elements.playIcon.classList.toggle("hidden", isPlaying);
+  updateTransportButton(isPlaying) {
+    const showReplay = !isPlaying && (this.hasEnded || this.audio.ended);
+
+    this.elements.playIcon.classList.toggle("hidden", isPlaying || showReplay);
     this.elements.pauseIcon.classList.toggle("hidden", !isPlaying);
+    this.elements.replayIcon.classList.toggle("hidden", !showReplay);
     this.elements.playPauseBtn.setAttribute(
       "aria-label",
-      isPlaying ? "Szünet" : "Lejátszás",
+      isPlaying ? "Szünet" : showReplay ? "Újrajátszás" : "Lejátszás",
     );
   }
 
