@@ -10,7 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = ROOT / "source" / "img"
-OUTPUT_DIR = ROOT / "public" / "assets" / "img"
+OUTPUT_DIR = ROOT / "docs" / "assets" / "img"
 OUTPUT_NAME = "cover.jpg"
 EXTENSIONS = (".jpg", ".jpeg", ".png", ".webp", ".heic")
 

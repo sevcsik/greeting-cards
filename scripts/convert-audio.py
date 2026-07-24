@@ -10,7 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = ROOT / "source" / "audio"
-OUTPUT_DIR = ROOT / "public" / "assets" / "audio"
+OUTPUT_DIR = ROOT / "docs" / "assets" / "audio"
 BITRATE = "128k"
 
 TRACKS = [

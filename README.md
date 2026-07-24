@@ -2,22 +2,22 @@
 
 Mobil-első statikus weboldal egyedi audio lejátszóval, GitHub Pages hosztolással és QR-kód deep linkekkel.
 
-**Publikus URL (előnézet):** https://sevcsik.github.io/greeting-cards/
+**Publikus URL:** https://sevcsik.github.io/greeting-cards/
 
 ## Projektstruktúra
 
 ```text
-public/                 # GitHub Pages site root
+docs/                   # GitHub Pages site (main branch /docs)
   index.html
   css/styles.css
   js/{config,player,main}.js
   assets/audio/*.m4a
   assets/img/cover.jpg
-source/                 # Forrás média (WAV + háttérkép)
+source/                 # Forrás média
 scripts/                # Build és QR generáló scriptek
 qrcodes/                # Generált QR-kód PNG-k
 site.config.json        # Publikus base URL a QR-kódokhoz
-.github/workflows/      # GitHub Pages deploy
+.github/workflows/      # Asset build a main branch-en
 ```
 
 ## Média optimalizálás
@@ -31,11 +31,9 @@ python3 scripts/convert-audio.py
 python3 scripts/copy-background.py
 ```
 
-Az ffmpeg a forrás `.m4a` fájlokat webre készített assetekké másolja a `public/assets/audio/` mappába.
+Az ffmpeg a forrás fájlokat a `docs/assets/` mappába készíti.
 
 ## QR-kódok
-
-Állítsd be a `site.config.json` fájlban a GitHub felhasználónevet, repo nevet és a végleges `baseUrl` értéket, majd:
 
 ```bash
 pip install qrcode[pil]
@@ -59,19 +57,15 @@ Generált fájlok:
 
 ## GitHub Pages
 
-A `.github/workflows/deploy.yml` workflow a `main` branch push után feltölti a `public/` mappát a `gh-pages` branch-re.
+Minden a **`main` branch-en** van. A GitHub Pages a `docs/` mappát szolgálja ki.
 
-**Repo beállítás (egyszeri):** Settings → Pages → Build and deployment → Source: **Deploy from a branch** → Branch: `gh-pages` / `/ (root)`.
+**Repo beállítás:** Settings → Pages → Source: **Deploy from a branch** → Branch: **`main`** → Folder: **`/docs`**
 
 ## Helyi előnézet
 
 ```bash
-cd public
+cd docs
 python3 -m http.server 8080
 ```
 
 Nyisd meg: http://localhost:8080
-
-## Megjegyzés a csatolt fájlokról
-
-A projekt a feltöltött `Éva.m4a`, `Margó.m4a`, `Lilla.m4a` és `Kati.m4a` hangfájlokat használja.
