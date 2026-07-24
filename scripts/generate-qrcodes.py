@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "site.config.json"
 OUTPUT_DIR = ROOT / "qrcodes"
 
-TRACKS = ["Éva", "Margó", "Lilla", "Kati"]
+TRACKS = ["Éva néni", "Margó", "Lilla", "Kati"]
 
 
 def load_base_url() -> str:
@@ -39,7 +39,7 @@ def slugify_filename(name: str) -> str:
     without_accents = "".join(
         char for char in normalized if unicodedata.category(char) != "Mn"
     )
-    return without_accents.lower()
+    return without_accents.lower().replace(" ", "-")
 
 
 def build_track_url(base_url: str, track_name: str) -> str:

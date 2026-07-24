@@ -27,4 +27,4 @@ python3 -m http.server 8080
 
 ## Deep linkek
 
-- `/?track=Éva`, `/?track=Margó`, `/?track=Lilla`, `/?track=Kati`
+- `/?track=Éva néni`, `/?track=Margó`, `/?track=Lilla`, `/?track=Kati`

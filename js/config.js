@@ -1,8 +1,8 @@
 export const TRACKS = [
   {
     id: 1,
-    slug: "Éva",
-    title: "Éva",
+    slug: "Éva néni",
+    title: "Éva néni",
     src: "assets/audio/track1.m4a",
   },
   {
